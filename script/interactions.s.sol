@@ -4,6 +4,7 @@ pragma solidity ^0.8.24;
 
 import {Script} from "forge-std/Script.sol";
 import {BasicNft} from "src/BasicNft.sol";
+import {MoodNft} from "src/MoodNft.sol";
 import {DevOpsTools} from "lib/foundry-devops/src/DevOpsTools.sol";
 
 contract MintBasicNft is Script {
@@ -21,6 +22,22 @@ contract MintBasicNft is Script {
     function mintNftOnContract(address _contract) public {
         vm.startBroadcast();
         BasicNft(_contract).mintNft(PUG);
+        vm.stopBroadcast();
+    }
+}
+
+contract MintMoodNft is Script {
+    function run() external {
+        address mostRecentlyDeployed = DevOpsTools.get_most_recent_deployment(
+            "MoodNft",
+            block.chainid
+        );
+        mintNftOnContract(mostRecentlyDeployed);
+    }
+
+    function mintNftOnContract(address _contract) public {
+        vm.startBroadcast();
+        MoodNft(_contract).mintNft();
         vm.stopBroadcast();
     }
 }
